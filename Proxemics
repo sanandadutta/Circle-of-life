@@ -1,0 +1,83 @@
+#include <Servo.h>
+#include <animationTools.h>
+
+//Defining Variables
+int ledPin1 = 3;
+int ledPin2 = 5;
+int ledPin3 = 6;
+int blinkRate = 1000;
+
+//servo things
+int servoRotation;
+Servo s1;
+int s1Pin = 2; // servo motor
+
+int sensorPin1 = 12;
+int sensorPin2 = 11;
+int sensorPin3 = 10;
+
+//int s2Pin = 3;
+int distance1; //for first sensor
+int distance2; //for second sensor
+int distance3; //for third sensor
+
+// distance, no change when addding sensors
+int sensorVal1;
+int distanceMM; //for first sensor
+int distanceMM2; //for second sensor
+int distanceMM3; //for third sensor
+
+int threshhold1 = 1000;
+float speedValue1 = 0.1;
+
+void setup(){
+pinMode(ledPin1, OUTPUT);
+pinMode(ledPin2, OUTPUT);
+pinMode(ledPin3, OUTPUT);
+pinMode(s1Pin,OUTPUT);
+Serial.begin(9600);
+s1.attach(s1Pin);
+}
+
+void loop(){
+distanceMM = pulseIn(ledPin1, HIGH);
+distanceMM2 = pulseIn(ledPin2, HIGH);
+distanceMM3 = pulseIn(ledPin3, HIGH);
+
+distance1 = pulseIn(sensorPin1,HIGH);
+distance2 = pulseIn(sensorPin2, HIGH);
+distance3 = pulseIn(sensorPin3, HIGH);
+
+//If condition for sensor 1
+if(distance1<=threshhold1) {
+speedValue1 = 0.9;  //faster
+digitalWrite(ledPin1,HIGH);
+}
+else {
+speedValue1 = 0.1;  //slower
+digitalWrite(ledPin1,LOW);
+}
+
+//If condition for sensor 2
+if(distance2<=threshhold1) {
+speedValue1 = 0.9;  //faster
+digitalWrite(ledPin2,HIGH);
+}
+else {
+speedValue1 = 0.1;  //slower
+digitalWrite(ledPin2,LOW);
+}
+
+//If condition for sensor 3
+if(distance3<=threshhold1) {
+speedValue1 = 0.9; //faster
+digitalWrite(ledPin3,HIGH);
+}
+else {
+speedValue1 = 0.1; //slower
+digitalWrite(ledPin3,LOW);
+}
+
+servoRotation = oscillate(0,180,0,speedValue1,millis());  //oscillate function for the value
+s1.write(servoRotation);
+}
